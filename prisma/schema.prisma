@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uid       String @id @default(uuid()) @db.Uuid()
+  name      String @db.VarChar(50)
+  age       Int    @db.Integer()
+  email     String @unique @db.VarChar(100)
+  password  String 
+
+  createdAt DateTime @default(now()) @map("create_at") @db.Date()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Date () 
+
+  linkGit String?
+
+  @@map("users")
+}
+
+model Product {
+  uid          String  @id @default(uuid()) @db.Uuid()
+  nome         String  @db.VarChar(50)
+  description  String  @db.VarChar(100)
+  price        Decimal @db.Money()
+  quantity     Int 
+  typeProduct  String @map("type_product") @db.VarChar(50)
+
+  createdAt DateTime @default(now()) @map("create_at") @db.Date()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Date ()
+
+  available Available
+
+  @@map("products")
+}
+
+enum Available {
+  Yes
+  No
+}
+
+model Store {
+  cnpj              String  @id @db.Char(14)
+  name              String  @db.VarChar(50)
+  segment           String? @default("food")
+  address           String  
+  phone             String?
+  quantityBranches  Int
+  dateOpen          DateTime @db.Timestamp()
+
+  createdAt DateTime @default(now()) @map("create_at") @db.Date()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Date ()
+
+  @@map("stores")
+}
+
+model Supplier {
+  uid     String  @id @default(uuid()) @db.Uuid()
+  name    String  @db.VarChar(50)
+  email   String  @db.VarChar(100)
+  rating  Decimal @db.Decimal()
+  
+  createdAt DateTime @default(now()) @map("create_at") @db.Date()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") 
+
+}
